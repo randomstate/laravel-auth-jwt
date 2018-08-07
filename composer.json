@@ -1,0 +1,30 @@
+{
+  "name": "randomstate/laravel-auth-jwt",
+  "description": "JWT issuing and verification strategy for randomstate/laravel-auth",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Connor Forsyth",
+      "email": "connor@randomstate.co.uk"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "RandomState\\LaravelAuth\\Strategies\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "RandomState\\LaravelAuth\\Tests\\": "tests/",
+      "Tests\\": "vendor/laravel/laravel/tests"
+    },
+    "classmap": [
+      "tests/TestCase.php"
+    ]
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^7.3",
+    "laravel/laravel": "^5.6"
+  }
+}
