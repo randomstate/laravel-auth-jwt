@@ -23,6 +23,10 @@
       "tests/TestCase.php"
     ]
   },
+  "require": {
+    "randomstate/laravel-auth": "^1.0",
+    "lcobucci/jwt": "^3.2"
+  },
   "require-dev": {
     "phpunit/phpunit": "^7.3",
     "laravel/laravel": "^5.6"
