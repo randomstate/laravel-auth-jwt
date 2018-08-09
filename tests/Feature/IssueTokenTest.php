@@ -4,6 +4,8 @@
 namespace RandomState\LaravelAuth\Tests\Feature;
 
 
+use DateInterval;
+use DateTime;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Token;
@@ -65,5 +67,33 @@ class IssueTokenTest extends TestCase
         $this->assertTrue($parsedToken->verify(new Sha256, 'testing'));
     }
 
+    /**
+     * @test
+     */
+    public function can_verify_signed_token()
+    {
+        $this->issuer->signTokens(new Sha256, 'testing');
+        $token = $this->issuer->issue('test');
+
+        $jwt = $token->__toString();
+
+        $this->assertTrue($this->issuer->verify((new Parser)->parse($jwt)));
+    }
+
+    /**
+     * @test
+     */
+    public function default_standard_claims_are_made_when_provided()
+    {
+        $default = $this->issuer->issue('test');
+
+        $this->assertEquals('test', $default->getClaim('jti'));
+        $this->assertEquals('test', $default->getClaim('sub'));
+        $this->assertFalse($default->hasClaim('aud'));
+        $this->assertInstanceOf(DateTime::class, $iat = DateTime::createFromFormat('U', $default->getClaim('iat')));
+        $this->assertFalse($default->hasClaim('iss'));
+        $this->assertFalse($default->hasClaim('nbf'));
+        $this->assertEquals($iat->add(new DateInterval('PT1H')), DateTime::createFromFormat('U', $default->getClaim('exp')));
+    }
 
 }

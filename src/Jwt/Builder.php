@@ -100,6 +100,11 @@ class Builder
             $this->builder->set($key, $value);
         }
 
+        $this->builder
+            ->setIssuedAt($this->now())
+            ->setExpiration($this->expiration())
+        ;
+
         if ($this->signer && $this->key) {
             $this->builder->sign($this->signer, $this->key);
         }
@@ -134,5 +139,23 @@ class Builder
         $this->subject = $subject;
 
         return $this;
+    }
+
+    /**
+     * @return int
+     */
+    protected function now()
+    {
+        return $this->now ? $this->now->getTimestamp() : (new DateTime)->getTimestamp();
+    }
+
+    protected function expiration()
+    {
+        return DateTime::createFromFormat('U', $this->now())->add($this->expirationWindow())->getTimestamp();
+    }
+
+    protected function expirationWindow()
+    {
+        return $this->expirationWindow ?? new DateInterval('PT1H');
     }
 }

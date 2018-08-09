@@ -4,20 +4,32 @@
 namespace RandomState\LaravelAuth\Strategies\Jwt;
 
 
+use DateTime;
 use Lcobucci\JWT\Signer;
+use Lcobucci\JWT\Token;
+use Lcobucci\JWT\ValidationData;
 
 class Issuer
 {
     /**
-     * @var Signer
+     * @var Signer | null
      */
     protected $signer = null;
+
+    /**
+     * @var Signer\Key | string | null
+     */
     protected $key = null;
 
-    public function __construct()
-    {
+    /**
+     * @var DateTime | null
+     */
+    protected $now = null;
 
-    }
+    /**
+     * @var string | null
+     */
+    protected $audience;
 
     public function signTokens(Signer $signer, $key)
     {
@@ -42,27 +54,31 @@ class Issuer
             ->getToken();
     }
 
-//    public function issueOnce($id, $subject, $audience = null, $expiration = null, $issuedAt = null, $issuer = null, $notBefore = null)
-//    {
-//        return $this->build($id, $subject, $audience, $expiration, $issuedAt, $issuer, $notBefore)->getToken();
-//    }
-//
-//    protected function build($id, $subject, $audience = null, $expiration = null, $issuedAt = null, $issuer = null, $notBefore = null)
-//    {
-//        $builder = new Builder();
-//        $builder
-//            ->setId($id)
-//            ->setSubject($subject);
-//
-//
-//
-////        $builder->sign($this->signer, $this->key);
-//
-//        return $builder;
-//    }
-
     protected function builder()
     {
         return new Builder;
+    }
+
+    public function validate(Token $token)
+    {
+        $validator = new ValidationData();
+
+        if ($this->audience) {
+            $validator->setAudience($this->audience);
+        }
+
+        $validator->setCurrentTime($this->now ? $this->now->getTimestamp() : (new DateTime())->getTimestamp());
+        $validator->setSubject($token->getClaim('sub'));
+
+        return $token->validate($validator);
+    }
+
+    public function verify(Token $token)
+    {
+        if (is_null($this->signer) && is_null($this->key) && $token->getHeader('alg') === 'none') {
+            return true;
+        }
+
+        return $token->verify($this->signer, $this->key);
     }
 }
