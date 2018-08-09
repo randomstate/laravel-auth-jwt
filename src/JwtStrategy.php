@@ -4,11 +4,9 @@
 namespace RandomState\LaravelAuth\Strategies;
 
 
-use DateTime;
 use Illuminate\Http\Request;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Token;
-use Lcobucci\JWT\ValidationData;
 use RandomState\LaravelAuth\AbstractAuthStrategy;
 use RandomState\LaravelAuth\Strategies\Jwt\Issuer;
 
