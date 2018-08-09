@@ -50,11 +50,6 @@ class StrategyTest extends TestCase
             'birthday' => '2018-01-01',
         ]);
 
-
-        /** @var AuthManager $manager */
-        $manager = $this->app->make(AuthManager::class);
-        $manager->register('jwt', $this->strategy);
-
         $request = Request::create('test', 'GET', [], [], [], [
             'HTTP_AUTHORIZATION' => 'Bearer ' . $token,
         ]);
