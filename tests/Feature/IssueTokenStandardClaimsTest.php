@@ -129,4 +129,14 @@ class IssueTokenStandardClaimsTest extends TestCase
 
         $this->assertEquals(now()->timestamp, $token->getClaim('nbf'));
     }
+
+    /**
+     * @test
+     */
+    public function can_set_issuer() {
+        $this->issuer->withIssuer('me');
+        $token = $this->issuer->issue('test');
+
+        $this->assertEquals('me', $token->getClaim('iss'));
+    }
 }

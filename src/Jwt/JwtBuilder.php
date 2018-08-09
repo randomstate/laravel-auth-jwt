@@ -39,6 +39,11 @@ trait JwtBuilder
      */
     protected $notBeforeWindow = null;
 
+    /**
+     * @var string | null
+     */
+    protected $issuer = null;
+
     public function withAudience($audience)
     {
         $this->audience = $audience;
@@ -77,6 +82,14 @@ trait JwtBuilder
     public function withNotBeforeWindow(DateInterval $notBeforeWindow = null)
     {
         $this->notBeforeWindow = $notBeforeWindow;
+
+        return $this;
+    }
+
+
+    public function withIssuer($issuer = null)
+    {
+        $this->issuer = $issuer;
 
         return $this;
     }
