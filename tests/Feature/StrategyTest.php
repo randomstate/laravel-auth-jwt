@@ -6,9 +6,6 @@ namespace RandomState\LaravelAuth\Tests\Feature;
 
 use Illuminate\Foundation\Testing\Concerns\MakesHttpRequests;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use RandomState\LaravelAuth\AuthManager;
-use RandomState\LaravelAuth\Http\Middleware\Authenticate;
 use RandomState\LaravelAuth\LaravelAuthServiceProvider;
 use RandomState\LaravelAuth\Strategies\Jwt\Issuer;
 use RandomState\LaravelAuth\Strategies\JwtStrategy;
