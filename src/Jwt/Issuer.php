@@ -11,6 +11,8 @@ use Lcobucci\JWT\ValidationData;
 
 class Issuer
 {
+    use JwtBuilder;
+
     /**
      * @var Signer | null
      */
@@ -20,11 +22,6 @@ class Issuer
      * @var Signer\Key | string | null
      */
     protected $key = null;
-
-    /**
-     * @var DateTime | null
-     */
-    protected $now = null;
 
     /**
      * @var string | null
@@ -50,7 +47,13 @@ class Issuer
             ->withId($subject)
             ->withSubject($subject)
             ->withClaims($claims)
+            ->withAudience($this->audience)
+            ->withFixedExpiration($this->expiration)
+            ->withExpirationWindow($this->expirationWindow)
+            ->withFixedNotBefore($this->notBefore)
+            ->withNotBeforeWindow($this->notBeforeWindow)
             ->signWith($this->signer, $this->key)
+            ->setNow($this->now)
             ->getToken();
     }
 

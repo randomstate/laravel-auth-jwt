@@ -10,25 +10,12 @@ use Lcobucci\JWT\Signer;
 
 class Builder
 {
+    use JwtBuilder;
+
     /**
      * @var \Lcobucci\JWT\Builder
      */
     protected $builder;
-
-    /**
-     * @var string | null
-     */
-    protected $audience;
-
-    /**
-     * @var DateTime | null
-     */
-    protected $expiration;
-
-    /**
-     * @var DateInterval | null
-     */
-    protected $expirationWindow;
 
     /**
      * @var DateTime | null
@@ -36,29 +23,9 @@ class Builder
     protected $issuedAt;
 
     /**
-     * @var boolean
-     */
-    protected $hideIssuedAt = false;
-
-    /**
      * @var string | null
      */
     protected $issuer;
-
-    /**
-     * @var DateTime | null
-     */
-    protected $notBefore;
-
-    /**
-     * @var DateInterval | null
-     */
-    protected $notBeforeWindow;
-
-    /**
-     * @var DateTime
-     */
-    protected $now;
 
     /**
      * @var array
@@ -101,9 +68,16 @@ class Builder
         }
 
         $this->builder
-            ->setIssuedAt($this->now())
-            ->setExpiration($this->expiration())
-        ;
+            ->setIssuedAt($this->now()->getTimestamp())
+            ->setExpiration($this->expiration()->getTimestamp());
+
+        if ($this->audience) {
+            $this->builder->setAudience($this->audience);
+        }
+
+        if ($this->notBefore()) {
+            $this->builder->setNotBefore($this->notBefore()->getTimestamp());
+        }
 
         if ($this->signer && $this->key) {
             $this->builder->sign($this->signer, $this->key);
@@ -142,20 +116,44 @@ class Builder
     }
 
     /**
-     * @return int
+     * @return DateTime
      */
     protected function now()
     {
-        return $this->now ? $this->now->getTimestamp() : (new DateTime)->getTimestamp();
+        if ($this->now instanceof \Closure) {
+            return clone ($this->now)();
+        }
+
+        return $this->now ? clone $this->now : new DateTime;
     }
 
     protected function expiration()
     {
-        return DateTime::createFromFormat('U', $this->now())->add($this->expirationWindow())->getTimestamp();
+        if ($this->expiration) {
+            return $this->expiration;
+        }
+
+        return $this->now()->add($this->expirationWindow());
     }
 
     protected function expirationWindow()
     {
-        return $this->expirationWindow ?? new DateInterval('PT1H');
+        return $this->expirationWindow ? $this->expirationWindow : new DateInterval('PT1H');
+    }
+
+    public function withAudience($audience)
+    {
+        $this->audience = $audience;
+
+        return $this;
+    }
+
+    protected function notBefore()
+    {
+        if ($this->notBefore) {
+            return $this->notBefore;
+        }
+
+        return $this->notBeforeWindow ? $this->now()->add($this->notBeforeWindow) : null;
     }
 }

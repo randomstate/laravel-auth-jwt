@@ -95,5 +95,4 @@ class IssueTokenTest extends TestCase
         $this->assertFalse($default->hasClaim('nbf'));
         $this->assertEquals($iat->add(new DateInterval('PT1H')), DateTime::createFromFormat('U', $default->getClaim('exp')));
     }
-
 }
