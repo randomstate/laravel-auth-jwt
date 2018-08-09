@@ -18,16 +18,6 @@ class Builder
     protected $builder;
 
     /**
-     * @var DateTime | null
-     */
-    protected $issuedAt;
-
-    /**
-     * @var string | null
-     */
-    protected $issuer;
-
-    /**
      * @var array
      */
     protected $claims = [];
@@ -70,6 +60,10 @@ class Builder
         $this->builder
             ->setIssuedAt($this->now()->getTimestamp())
             ->setExpiration($this->expiration()->getTimestamp());
+
+        if ($this->issuer) {
+            $this->builder->setIssuer($this->issuer);
+        }
 
         if ($this->audience) {
             $this->builder->setAudience($this->audience);

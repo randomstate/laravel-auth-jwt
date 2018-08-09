@@ -45,6 +45,7 @@ class Issuer
         return $this
             ->builder()
             ->withId($subject)
+            ->withIssuer($this->issuer)
             ->withSubject($subject)
             ->withClaims($claims)
             ->withAudience($this->audience)
