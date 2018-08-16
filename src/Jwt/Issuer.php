@@ -28,16 +28,32 @@ class Issuer
      */
     protected $audience;
 
+    /**
+     * @var Signer\Key | string | null
+     */
+    protected $verificationKey = null;
+
     public function signTokens(Signer $signer, $key)
     {
         $this->signer = $signer;
         $this->key = $key;
+
+        return $this;
     }
 
     public function withoutSigning()
     {
         $this->signer = null;
         $this->key = null;
+
+        return $this;
+    }
+
+    public function verifyWith($key)
+    {
+        $this->verificationKey = $key;
+
+        return $this;
     }
 
     public function issue($subject, array $claims = [])
@@ -79,10 +95,10 @@ class Issuer
 
     public function verify(Token $token)
     {
-        if (is_null($this->signer) && is_null($this->key) && $token->getHeader('alg') === 'none') {
+        if (is_null($this->signer) && is_null($this->key) && is_null($this->verificationKey) && $token->getHeader('alg') === 'none') {
             return true;
         }
 
-        return $token->verify($this->signer, $this->key);
+        return $token->verify($this->signer, $this->verificationKey ?? $this->key);
     }
 }
