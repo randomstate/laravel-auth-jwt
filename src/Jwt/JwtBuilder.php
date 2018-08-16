@@ -6,6 +6,7 @@ namespace RandomState\LaravelAuth\Strategies\Jwt;
 
 use DateInterval;
 use DateTime;
+use Lcobucci\JWT\Signer\Key;
 
 trait JwtBuilder
 {
