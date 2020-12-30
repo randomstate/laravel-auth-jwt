@@ -25,7 +25,7 @@ class StrategyTest extends TestCase
      */
     protected $strategy;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->issuer = $this->app->make(Issuer::class);

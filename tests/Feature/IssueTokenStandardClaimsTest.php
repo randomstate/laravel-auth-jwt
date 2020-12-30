@@ -16,7 +16,7 @@ class IssueTokenStandardClaimsTest extends TestCase
      */
     protected $issuer;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         date_default_timezone_set('UTC');

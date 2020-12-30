@@ -15,7 +15,7 @@ class TrustTokenTest extends TestCase
      */
     protected $issuer;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         $this->issuer = $this->app->make(Issuer::class);
